@@ -115,13 +115,13 @@ function draw_grid()
  -- vertical lines
   for i = 0,120,8
   do
-    line(i, 0, i, 128, 7 )
+    line(i, 0, i, 128, cl_darkgray)
   end
 
 -- horizontal lines
   for i = 0,120,8
   do
-    line( 0, i, 128, i, 7 )
+    line( 0, i, 128, i, cl_darkgray)
   end
 end
 
