@@ -84,8 +84,8 @@ end
 
 function _draw()
 cls() -- Clears the screen
-circfill(player.x, player.y, 6, player.color)
 draw_grid()
+circfill(player.x, player.y, 6, player.color)
 
 
 
