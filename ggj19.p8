@@ -45,6 +45,20 @@ function draw_player()
   spr(player.sprite, player.x, player.y)
 end
 
+function draw_grid()
+ -- Vertical lines
+ for i = 0,120,8
+ do
+    line(i, 0, i, 128, 7 )
+   end
+
+-- Horizontal lines
+ for i = 0,120,8
+ do
+    line( 0, i, 128, i, 7 )
+   end
+end
+
 function _init()
   player = make_player()
 end
@@ -68,24 +82,11 @@ function _update()
   if btn(B_btn) then
     player.color = cl_red
   end
-end
 
 function _draw()
   cls() -- Clears the screen
   draw_player()
-
-  -- Vertical lines
-  for i = 0,120,8
-  do
-    line(i, 0, i, 128, 7 )
-  end
-
-  -- Horizontal lines
-  for i = 0,120,8
-  do
-    line( 0, i, 128, i, 7 )
-  end
-
+  draw_grid()
 end
 
 __gfx__
