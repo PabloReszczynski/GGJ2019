@@ -83,6 +83,8 @@ end
 function update_cursor()
   if btn(A_btn) then
     cursor.color = cl_red
+  else
+    cursor.color = cl_blue
   end
   cursor.x = flr(player.x / 8) * 8
   cursor.y = flr((player.y + 8) / 8) * 8
