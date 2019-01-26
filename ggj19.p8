@@ -71,20 +71,18 @@ function Inventory()
   items = {},
  }
 
- --function inventory:update()
- -- if visible then
- --  if cursor.x then
-
- --  end
- --end
-
- function inventory:draw(cursor)
+ function inventory:update(cursor)
   if is_between(cursor,self, 48) then
-   rectfill(self.x,self.y,self.x_end,self.y_end, cl_yellow)
-   visible = true
+    self.visible = true
   else
-   visible = false
+    self.visible = false
   end
+ end
+
+ function inventory:draw()
+   if self.visible then
+     rectfill(self.x,self.y,self.x_end,self.y_end, cl_yellow)
+   end
  end
 
  return inventory
@@ -193,13 +191,14 @@ function main_screen()
   function state:update()
     self.player:update()
     self.cursor:update(self.player)
+    self.inventory:update(self.cursor)
     self.dummy:update(self.cursor)
   end
 
   function state:draw()
     cls() -- clears the screen
     draw_grid()
-    self.inventory:draw(self.cursor)
+    self.inventory:draw()
     self.cursor:draw()
     self.player:draw()
     self.dummy:draw()
