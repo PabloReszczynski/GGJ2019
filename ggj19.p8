@@ -78,7 +78,7 @@ function Inventory()
  --  end
  --end
 
- function inventory:draw()
+ function inventory:draw(cursor)
   if is_between(cursor,self, 48) then
    rectfill(self.x,self.y,self.x_end,self.y_end, cl_yellow)
    visible = true
@@ -199,7 +199,7 @@ function main_screen()
   function state:draw()
     cls() -- clears the screen
     draw_grid()
-    self.inventory:draw()
+    self.inventory:draw(self.cursor)
     self.cursor:draw()
     self.player:draw()
     self.dummy:draw()
