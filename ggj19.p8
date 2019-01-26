@@ -42,6 +42,17 @@ function make_player()
   return player
 end
 
+function make_dummy_object()
+  local dummy_object = {
+    x = 64,
+    y = 64,
+    vx = 2,
+    vy = 2,
+    sprite = 2
+  }
+  return dummy_object
+end
+
 function draw_player()
   spr(player.sprite, player.x, player.y)
 end
