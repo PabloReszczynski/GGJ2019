@@ -75,7 +75,14 @@ function DummyObject()
   function dummy_object:update()
     if is_between(cursor, self) then
       self.draggable = true
-    else
+    end
+
+    if btn(a_btn) and self.draggable then
+      self.x = cursor.x
+      self.y = cursor.y
+    end
+
+    if not(is_between(cursor, self)) then
       self.draggable = false
     end
   end
