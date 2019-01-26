@@ -30,7 +30,7 @@ local cl_peach = 15
 
 local global_state
 
-function Player()
+function player()
  local player = {
   x = 64,
   y = 64,
@@ -68,7 +68,7 @@ function dummycharacter()
   vx = 3,
   vy = 3,
   sprite = 9,
-  description = "uN GATITO."
+  description = "un gatito."
  }
 
  function dummy_character:update(cursor, textbox)
@@ -99,8 +99,15 @@ function dummycharacter()
  return dummy_character
 end
 
+function mkmap(cel_x, cel_y, sx, sy, celw, celh)
+ local mapa = {}
+ function mapa:draw()
+  map(cel_x, cel_y, sx, sy, celw, celh)
+ end
+ return mapa
+end
 
-function Inventory()
+function inventory()
  local inventory = {
   x = 40,
   x_end = 88,
@@ -108,10 +115,10 @@ function Inventory()
   y_end = 128,
   visible = false,
   slots = {
-    InventorySlot(6, 14),
-    InventorySlot(7, 14),
-    InventorySlot(8, 14),
-    InventorySlot(9, 14),
+    inventoryslot(6, 14),
+    inventoryslot(7, 14),
+    inventoryslot(8, 14),
+    inventoryslot(9, 14),
   },
  }
 
@@ -134,7 +141,7 @@ function Inventory()
  return inventory
 end
 
-function TextBox()
+function textbox()
   local box = {
     x = 0,
     y = 72,
@@ -156,7 +163,7 @@ function TextBox()
   return box
 end
 
-function InventorySlot(x, y)
+function inventoryslot(x, y)
  local slot = {
   object = nil,
   x = x * 8,
@@ -185,7 +192,7 @@ function InventorySlot(x, y)
  return slot
 end
 
-function DummyObject(x, y, description)
+function dummyobject(x, y, description)
  local dummy_object = {
   x = snap(x),
   y = snap(y),
@@ -224,7 +231,7 @@ function DummyObject(x, y, description)
  return dummy_object
 end
 
-function Cursor()
+function cursor()
  local cursor = {
   x = 0,
   y = 0,
@@ -232,16 +239,17 @@ function Cursor()
   dragging = nil,
  }
 
- function cursor:update(player)
+ function cursor:update(state)
   if btn(a_btn) then
    self.color = cl_red
-   player.sprite = 54
+   state.player.sprite = 54
+   enter_zone(state, self.x, self.y)
   else
    self.color = cl_blue
-   player.sprite = 38
+   state.player.sprite = 38
   end
-  self.x = snap(player.x)
-  self.y = snap(player.y + 8)
+  self.x = snap(state.player.x)
+  self.y = snap(state.player.y + 8)
 
   if self.dragging then
    self.dragging.x = self.x
@@ -272,7 +280,7 @@ function title_screen()
 
  function state:draw()
   cls()
-  print("pRESS z + x", 32, 64)
+  print("press z + x", 32, 64)
  end
 
  return state
@@ -280,12 +288,13 @@ end
 
 function main_screen()
  local state = {
-  player = Player(),
+  player = player(),
   dummy_character = dummycharacter(),
-  cursor = Cursor(),
-  inventory = Inventory(),
-  dummy = DummyObject(10, 10, "uN MUEBLE."),
-  textbox = TextBox()
+  cursor = cursor(),
+  inventory = inventory(),
+  dummy = dummyobject(10, 10, "un mueble."),
+  textbox = textbox(),
+  map = mkmap(0,0,0,0,16,16),
  }
 
  function state:handle_input()
@@ -293,7 +302,7 @@ function main_screen()
 
  function state:update()
   self.player:update()
-  self.cursor:update(self.player)
+  self.cursor:update(self)
   self.textbox:update()
   self.dummy_character:update(self.cursor, self.textbox)
   self.inventory:update(self.cursor)
@@ -302,7 +311,7 @@ function main_screen()
 
  function state:draw()
   cls() -- clears the screen
-  map(0,0,0,0,16,16)
+  self.map:draw()
   self.inventory:draw()
   self.cursor:draw()
   self.dummy_character:draw()
@@ -328,6 +337,14 @@ function move(object, dir_x, dir_y)
     object.x = next_x
     object.y = next_y
   end
+end
+
+function enter_zone(state, dir_x, dir_y)
+ local map_tile = map_pos(dir_x, dir_y)
+ if (fget(map_tile, 1)) then
+  rectfill(10,10,10,10,1)
+  state.map = mkmap( 10, 10, 15, 15, 128, 128, 0 )
+ end
 end
 
 function snap(i)
