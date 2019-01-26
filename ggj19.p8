@@ -72,7 +72,7 @@ function dummycharacter()
  }
 
  function dummy_character:update(cursor, textbox)
-  if is_between(cursor, self, 16) then
+  if is_between(cursor, self, 8) then
    textbox.text = self.description
   end
 
@@ -144,13 +144,13 @@ function TextBox()
   }
 
   function box:update()
-    self.text = "hola hola cocacola"
+    self.text = ""
   end
 
   function box:draw()
     rect(self.x, self.y, self.x + self.width, self.y + self.height, cl_yellow)
     color(cl_darkgreen)
-    print(self.text, self.x + 1, self.y + 1)
+    print(self.text, self.x + 4, self.y + 4)
   end
 
   return box
@@ -235,8 +235,10 @@ function Cursor()
  function cursor:update(player)
   if btn(a_btn) then
    self.color = cl_red
+   player.sprite = 54
   else
    self.color = cl_blue
+   player.sprite = 38
   end
   self.x = snap(player.x)
   self.y = snap(player.y + 8)
@@ -292,8 +294,8 @@ function main_screen()
  function state:update()
   self.player:update()
   self.cursor:update(self.player)
-  self.dummy_character:update(self.cursor, self.textbox)
   self.textbox:update()
+  self.dummy_character:update(self.cursor, self.textbox)
   self.inventory:update(self.cursor)
   self.dummy:update(self.cursor, self.textbox)
  end
@@ -348,7 +350,10 @@ function draw_grid()
 end
 
 function is_between(obj1, obj2, range)
- return obj1.x < (obj2.x + range) and obj1.x >= obj2.x and obj1.y < (obj2.y + range) and obj1.y >= obj2.y
+ return obj1.x < (obj2.x + range) and
+  obj1.x >= obj2.x and
+  obj1.y < (obj2.y + range) and
+  obj1.y >= obj2.y
 end
 
 function _init()
