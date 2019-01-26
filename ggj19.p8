@@ -45,17 +45,19 @@ end
 
 function make_dummy_object()
   local dummy_object = {
-    x = 64,
-    y = 64,
-    vx = 2,
-    vy = 2,
-    sprite = 2
+    x = 8,
+    y = 8,
+    sprite = 3
   }
   return dummy_object
 end
 
 function draw_player()
   spr(player.sprite, player.x, player.y)
+end
+
+function draw_dummy_object()
+  spr(dummy_object.sprite, dummy_object.x, dummy_object.y)
 end
 
 function draw_grid()
@@ -122,6 +124,7 @@ function _draw()
   draw_grid()
   draw_cursor()
   draw_player()
+  draw_dummy_object()
 end
 
 __gfx__
