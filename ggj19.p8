@@ -61,6 +61,36 @@ function Player()
   return player
 end
 
+function Inventory()
+ local inventory = {
+  x = 40,
+  x_end = 88,
+  y = 104,
+  y_end = 128,
+  visible = false,
+  items = {},
+ }
+
+ --function inventory:update()
+ -- if visible then
+ --  if cursor.x then
+
+ --  end
+ --end
+
+ function inventory:draw()
+  if is_between(cursor,self, 48) then
+   rectfill(self.x,self.y,self.x_end,self.y_end, cl_yellow)
+   visible = true
+  else
+   visible = false
+  end
+ end
+
+ return inventory
+end
+
+
 function DummyObject(x, y)
   local dummy_object = {
     x = snap(x),
@@ -71,7 +101,7 @@ function DummyObject(x, y)
   }
 
   function dummy_object:update(cursor)
-    if is_between(cursor, self) then
+    if is_between(cursor, self, 8) then
       self.draggable = true
     end
 
@@ -85,7 +115,7 @@ function DummyObject(x, y)
       end
     end
 
-    if not(is_between(cursor, self)) then
+    if not(is_between(cursor, self, 8)) then
       self.draggable = false
     end
   end
@@ -153,6 +183,7 @@ function main_screen()
   local state = {
     player = Player(),
     cursor = Cursor(),
+    inventory = Inventory(),
     dummy = DummyObject(10, 10)
   }
 
@@ -168,6 +199,7 @@ function main_screen()
   function state:draw()
     cls() -- clears the screen
     draw_grid()
+    self.inventory:draw()
     self.cursor:draw()
     self.player:draw()
     self.dummy:draw()
@@ -195,8 +227,8 @@ function draw_grid()
   end
 end
 
-function is_between(obj1, obj2)
- return obj1.x < (obj2.x + 8) and obj1.x >= obj2.x and obj1.y < (obj2.y + 8) and obj1.y >= obj2.y
+function is_between(obj1, obj2, range)
+ return obj1.x < (obj2.x + range) and obj1.x >= obj2.x and obj1.y < (obj2.y + range) and obj1.y >= obj2.y
 end
 
 function _init()
