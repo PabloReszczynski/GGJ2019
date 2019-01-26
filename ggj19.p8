@@ -29,6 +29,7 @@ local cl_pink = 14
 local cl_peach = 15
 
 local player
+local cursor
 local dummy_object
 
 function make_player()
@@ -73,8 +74,29 @@ function draw_grid()
   end
 end
 
+function make_cursor()
+  return {
+    x = 0,
+    y = 0,
+    color = cl_blue
+  }
+end
+
+function update_cursor()
+  if btn(A_btn) then
+    cursor.color = cl_red
+  end
+  cursor.x = flr(player.x / 8) * 8
+  cursor.y = flr((player.y + 8) / 8) * 8
+end
+
+function draw_cursor()
+  rect(cursor.x, cursor.y, cursor.x + 8, cursor.y + 8, cursor.color)
+end
+
 function _init()
   player = make_player()
+  cursor = make_cursor()
   dummy_object = make_dummy_object()
 end
 
@@ -91,17 +113,14 @@ function _update()
   if btn(up_btn) then
     player.y -= player.vy
   end
-  if btn(A_btn) then
-    player.color = cl_blue
-  end
-  if btn(B_btn) then
-    player.color = cl_red
-  end
+  update_cursor()
+
 end
 
 function _draw()
   cls() -- Clears the screen
   draw_grid()
+  draw_cursor()
   draw_player()
   draw_dummy_object()
 end
