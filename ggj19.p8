@@ -68,10 +68,16 @@ function dummycharacter()
   vx = 3,
   vy = 3,
   sprite = 9,
+  description = "uN GATITO."
  }
 
- function dummy_character:update()
+ function dummy_character:update(cursor, textbox)
+  if is_between(cursor, self, 16) then
+   textbox.text = self.description
+  end
+
   direction = flr(rnd(40))
+
   if direction == 0 and self.x <= 120 then
    move(self, self.vx, 0)
   end
@@ -179,19 +185,21 @@ function InventorySlot(x, y)
  return slot
 end
 
-function DummyObject(x, y)
+function DummyObject(x, y, description)
  local dummy_object = {
   x = snap(x),
   y = snap(y),
   sprite = 3,
   draggable = false,
   dragged = false,
-  inventory = false
+  inventory = false,
+  description = description
  }
 
- function dummy_object:update(cursor)
+ function dummy_object:update(cursor, textbox)
   if is_between(cursor, self, 8) then
    self.draggable = true
+   textbox.text = self.description
   end
 
   if btn(a_btn) and self.draggable then
@@ -274,7 +282,7 @@ function main_screen()
   dummy_character = dummycharacter(),
   cursor = Cursor(),
   inventory = Inventory(),
-  dummy = DummyObject(10, 10),
+  dummy = DummyObject(10, 10, "uN MUEBLE."),
   textbox = TextBox()
  }
 
@@ -284,10 +292,10 @@ function main_screen()
  function state:update()
   self.player:update()
   self.cursor:update(self.player)
-  self.dummy_character:update()
+  self.dummy_character:update(self.cursor, self.textbox)
   self.textbox:update()
   self.inventory:update(self.cursor)
-  self.dummy:update(self.cursor)
+  self.dummy:update(self.cursor, self.textbox)
  end
 
  function state:draw()
@@ -298,8 +306,6 @@ function main_screen()
   self.dummy_character:draw()
   if not(self.dummy.inventory) then
     self.dummy:draw()
-  else
-    rectfill(0,0,10,10,cl_blue)
   end
   self.textbox:draw()
   self.player:draw()
