@@ -32,7 +32,7 @@ local player
 local cursor
 local dummy_object
 
-function make_player()
+function Player()
   local player = {
     x = 64,
     y = 64,
@@ -40,10 +40,30 @@ function make_player()
     vy = 2,
     sprite = 2
   }
+
+  function player:update()
+    if btn(right_btn) then
+      self.x += self.vx
+    end
+    if btn(left_btn) then
+      self.x -= self.vx
+    end
+    if btn(down_btn) then
+      self.y += self.vy
+    end
+    if btn(up_btn) then
+      self.y -= self.vy
+    end
+  end
+
+  function player:draw()
+    spr(player.sprite, player.x, player.y)
+  end
+
   return player
 end
 
-function make_dummy_object()
+function DummyObject()
   local dummy_object = {
     x = 8,
     y = 8,
@@ -51,15 +71,44 @@ function make_dummy_object()
     draggable = false,
     dragged = false,
   }
+
+  function dummy_object:update()
+    if is_between(cursor, self) then
+      self.draggable = true
+    else
+      self.draggable = false
+    end
+  end
+
+  function dummy_object:draw()
+    spr(self.sprite, self.x, self.y)
+  end
+
   return dummy_object
 end
 
-function draw_player()
-  spr(player.sprite, player.x, player.y)
-end
+function Cursor()
+  local cursor = {
+    x = 0,
+    y = 0,
+    color = cl_blue
+  }
 
-function draw_dummy_object()
-  spr(dummy_object.sprite, dummy_object.x, dummy_object.y)
+  function cursor:update()
+    if btn(a_btn) then
+      self.color = cl_red
+    else
+      self.color = cl_blue
+    end
+    self.x = flr(player.x / 8) * 8
+    self.y = flr((player.y + 8) / 8) * 8
+  end
+
+  function cursor:draw()
+    rect(cursor.x, cursor.y, cursor.x + 8, cursor.y + 8, cursor.color)
+  end
+
+  return cursor
 end
 
 function draw_grid()
@@ -76,76 +125,29 @@ function draw_grid()
   end
 end
 
-function make_cursor()
-  return {
-    x = 0,
-    y = 0,
-    color = cl_blue
-  }
-end
-
-function update_cursor()
-  if btn(a_btn) then
-    cursor.color = cl_red
-  else
-    cursor.color = cl_blue
-  end
-  cursor.x = flr(player.x / 8) * 8
-  cursor.y = flr((player.y + 8) / 8) * 8
-end
-
 function is_between(obj1, obj2)
  return obj1.x < (obj2.x + 8) and obj1.x >= obj2.x and obj1.y < (obj2.y + 8) and obj1.y >= obj2.y
 end
 
-function update_dummy_object()
-  if is_between(cursor, dummy_object) then
-    dummy_object.draggable = true
-  else
-    dummy_object.draggable = false
-  end
-end
-
-function draw_cursor()
-  rect(cursor.x, cursor.y, cursor.x + 8, cursor.y + 8, cursor.color)
-end
-
 function _init()
-  player = make_player()
-  cursor = make_cursor()
-  dummy_object = make_dummy_object()
+  player = Player()
+  cursor = Cursor()
+  dummy_object = DummyObject()
 end
 
 
 function _update()
-  if btn(right_btn) then
-    player.x += player.vx
-  end
-  if btn(left_btn) then
-    player.x -= player.vx
-  end
-  if btn(down_btn) then
-    player.y += player.vy
-  end
-  if btn(up_btn) then
-    player.y -= player.vy
-  end
-  update_cursor()
-  update_dummy_object()
-
+  player:update()
+  cursor:update()
+  dummy_object:update()
 end
 
 function _draw()
   cls() -- clears the screen
   draw_grid()
-  draw_cursor()
-  draw_player()
-  draw_dummy_object()
-  if dummy_object.draggable then
-   circfill(64,64,8,cl_peach)
-  else
-   circfill(64,64,8,cl_black)
-  end
+  cursor:draw()
+  player:draw()
+  dummy_object:draw()
 end
 
 __gfx__
