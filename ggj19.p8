@@ -2,12 +2,31 @@ pico-8 cartridge // http://www.pico-8.com
 version 16
 __lua__
 
+-- Buttons
 local left_btn = 0
 local right_btn = 1
 local up_btn = 2
 local down_btn = 3
 local A_btn = 4
 local B_btn = 5
+
+-- Colors
+local cl_black = 0
+local cl_darkblue = 1
+local cl_darkpurple = 2
+local cl_darkgreen = 3
+local cl_brown = 4
+local cl_darkgray = 5
+local cl_lightgray = 6
+local cl_white = 7
+local cl_red = 8
+local cl_orange = 9
+local cl_yellow = 10
+local cl_green = 11
+local cl_blue = 12
+local cl_indigo = 13
+local cl_pink = 14
+local cl_peach = 15
 
 local player
 
@@ -17,7 +36,7 @@ function make_player()
     y = 64,
     vx = 2,
     vy = 2,
-    color = 6
+    color = cl_blue
   }
   return player
 end
@@ -40,10 +59,10 @@ function _update()
     player.y -= player.vy
   end
   if btn(A_btn) then
-    player.color = 6
+    player.color = cl_blue
   end
   if btn(B_btn) then
-    player.color = 9
+    player.color = cl_red
   end
 end
 
