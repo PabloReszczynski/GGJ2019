@@ -87,8 +87,14 @@ end
 function update_cursor()
   if btn(a_btn) then
     cursor.color = cl_red
+    if dummy_object.draggable then
+     dummy_object.dragged = true
+    else
+     dummy_object.dragged = false
+    end
   else
     cursor.color = cl_blue
+    dummy_object.dragged = false
   end
   cursor.x = flr(player.x / 8) * 8
   cursor.y = flr((player.y + 8) / 8) * 8
@@ -120,18 +126,30 @@ end
 function _update()
   if btn(right_btn) then
     player.x += player.vx
+    if dummy_object.dragged then
+     dummy_object.x = cursor.x
+    end
   end
   if btn(left_btn) then
     player.x -= player.vx
+    if dummy_object.dragged then
+     dummy_object.x = cursor.x
+    end
   end
   if btn(down_btn) then
     player.y += player.vy
+    if dummy_object.dragged then
+     dummy_object.y = cursor.y
+    end
   end
   if btn(up_btn) then
     player.y -= player.vy
+    if dummy_object.dragged then
+     dummy_object.y = cursor.y
+    end
   end
-  update_cursor()
   update_dummy_object()
+  update_cursor()
 
 end
 
@@ -141,7 +159,7 @@ function _draw()
   draw_cursor()
   draw_player()
   draw_dummy_object()
-  if dummy_object.draggable then
+  if dummy_object.dragged then
    circfill(64,64,8,cl_peach)
   else
    circfill(64,64,8,cl_black)
