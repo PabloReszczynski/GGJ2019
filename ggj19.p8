@@ -30,6 +30,7 @@ local cl_peach = 15
 
 local global_state
 
+
 local v_flip_sprites = {
 }
 
@@ -82,9 +83,9 @@ function dummycharacter()
   description = "un gatito."
  }
 
- function dummy_character:update(cursor, textbox)
-  if is_between(cursor, self, 8) then
-   textbox.text = self.description
+ function dummy_character:update(state)
+  if is_between(state.cursor, self, 8) then
+   state.textbox.text = self.description
   end
 
   direction = flr(rnd(40))
@@ -110,11 +111,18 @@ function dummycharacter()
  return dummy_character
 end
 
-function mkmap(cel_x, cel_y, sx, sy, celw, celh)
- local mapa = {}
+function mkmap(cel_x, cel_y, sx, sy, celw, celh, entities)
+ local mapa = {entities = entities}
+
+ function mapa:update(state)
+  foreach(self.entities, function(e) e:update(state) end)
+ end
+
  function mapa:draw()
   map(cel_x, cel_y, sx, sy, celw, celh)
+  foreach(self.entities, function(e) e:draw() end)
  end
+
  return mapa
 end
 
@@ -300,12 +308,12 @@ end
 function main_screen()
  local state = {
   player = player(),
-  dummy_character = dummycharacter(),
+  --dummy_character = dummycharacter(),
   cursor = cursor(),
   inventory = inventory(),
   dummy = dummyobject(10, 10, "un mueble."),
   textbox = textbox(),
-  map = mkmap(0,0,0,0,16,16),
+  map = mkmap(0,0,0,0,16,16, {dummycharacter()}),
  }
 
  function state:handle_input()
@@ -315,7 +323,8 @@ function main_screen()
   self.player:update()
   self.cursor:update(self)
   self.textbox:update()
-  self.dummy_character:update(self.cursor, self.textbox)
+  --self.dummy_character:update(self.cursor, self.textbox)
+  self.map:update(self)
   self.inventory:update(self.cursor)
   self.dummy:update(self.cursor, self.textbox)
  end
@@ -326,7 +335,8 @@ function main_screen()
   draw_flip_sprites()
   self.inventory:draw()
   self.cursor:draw()
-  self.dummy_character:draw()
+  --self.dummy_character:draw()
+
   if not(self.dummy.inventory) then
     self.dummy:draw()
   end
@@ -354,7 +364,13 @@ end
 function enter_zone(state, dir_x, dir_y)
  local map_tile = map_pos(dir_x, dir_y)
  if (fget(map_tile, 1)) then
-  state.map = mkmap(16, 0, 0, 16, 128, 128, 0)
+  state.map = bar
+ elseif (fget(map_tile, 2)) then
+  state.map = bakery
+ elseif (fget(map_tile, 3)) then
+  state.map = library
+ elseif (fget(map_tile, 4)) then
+  state.map = main_zone
  end
 end
 
@@ -383,6 +399,12 @@ function is_between(obj1, obj2, range)
   obj1.y < (obj2.y + range) and
   obj1.y >= obj2.y
 end
+
+main_zone = mkmap(0, 0, 0, 16, 128, 128, 0, {dummycharacter()})
+bar = mkmap(16, 0, 0, 16, 128, 128, 0, {dummycharacter()})
+bakery = mkmap(16, 23, 0, 16, 128, 128, 0, {})
+library = mkmap(16, 48, 0, 16, 128, 128, 0, {})
+
 
 function _init()
  global_state = title_screen()
