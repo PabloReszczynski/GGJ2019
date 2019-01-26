@@ -31,34 +31,34 @@ local cl_peach = 15
 local global_state
 
 function Player()
-  local player = {
-    x = 64,
-    y = 64,
-    vx = 2,
-    vy = 2,
-    sprite = 2
-  }
+ local player = {
+  x = 64,
+  y = 64,
+  vx = 2,
+  vy = 2,
+  sprite = 2
+ }
 
-  function player:update()
-    if btn(right_btn) then
-      self.x += self.vx
-    end
-    if btn(left_btn) then
-      self.x -= self.vx
-    end
-    if btn(down_btn) then
-      self.y += self.vy
-    end
-    if btn(up_btn) then
-      self.y -= self.vy
-    end
+ function player:update()
+  if btn(right_btn) then
+   self.x += self.vx
   end
-
-  function player:draw()
-    spr(player.sprite, player.x, player.y)
+  if btn(left_btn) then
+   self.x -= self.vx
   end
+  if btn(down_btn) then
+   self.y += self.vy
+  end
+  if btn(up_btn) then
+   self.y -= self.vy
+  end
+ end
 
-  return player
+ function player:draw()
+  spr(player.sprite, player.x, player.y)
+ end
+
+ return player
 end
 
 function Inventory()
@@ -73,157 +73,170 @@ function Inventory()
 
  function inventory:update(cursor)
   if is_between(cursor,self, 48) then
-    self.visible = true
+   self.visible = true
   else
-    self.visible = false
+   self.visible = false
   end
  end
 
  function inventory:draw()
-   if self.visible then
-     rectfill(self.x,self.y,self.x_end,self.y_end, cl_yellow)
-   end
+  if self.visible then
+   rectfill(self.x,self.y,self.x_end,self.y_end, cl_yellow)
+  end
  end
 
  return inventory
 end
 
+function InventorySlot(x, y)
+ local inventory_slot = {
+  object = nil,
+  x = x,
+  y = y,
+ }
+ function inventory_slot:update(object)
+  if is_between(self, object, 8) then
+   self.object = object
+  end
+ end
+ return inventory_slot
+end
 
 function DummyObject(x, y)
-  local dummy_object = {
-    x = snap(x),
-    y = snap(y),
-    sprite = 3,
-    draggable = false,
-    dragged = false,
-  }
+ local dummy_object = {
+  x = snap(x),
+  y = snap(y),
+  sprite = 3,
+  draggable = false,
+  dragged = false,
+ }
 
-  function dummy_object:update(cursor)
-    if is_between(cursor, self, 8) then
-      self.draggable = true
-    end
-
-    if btn(a_btn) and self.draggable then
-      if not(cursor.dragging) then
-        cursor.dragging = self
-      end
-    else
-      if cursor.dragging == self then
-        cursor.dragging = false
-      end
-    end
-
-    if not(is_between(cursor, self, 8)) then
-      self.draggable = false
-    end
+ function dummy_object:update(cursor)
+  if is_between(cursor, self, 8) then
+   self.draggable = true
   end
 
-  function dummy_object:draw()
-    spr(self.sprite, self.x, self.y)
+  if btn(a_btn) and self.draggable then
+   if not(cursor.dragging) then
+    cursor.dragging = self
+   end
+  else
+   if cursor.dragging == self then
+    cursor.dragging = false
+   end
   end
 
-  return dummy_object
+  if not(is_between(cursor, self, 8)) then
+   self.draggable = false
+  end
+ end
+
+ function dummy_object:draw()
+  spr(self.sprite, self.x, self.y)
+ end
+
+ return dummy_object
 end
 
 function Cursor()
-  local cursor = {
-    x = 0,
-    y = 0,
-    color = cl_blue,
-    dragging = false
-  }
+ local cursor = {
+  x = 0,
+  y = 0,
+  color = cl_blue,
+  dragging = false
+ }
 
-  function cursor:update(player)
-    if btn(a_btn) then
-      self.color = cl_red
-    else
-      self.color = cl_blue
-    end
-    self.x = snap(player.x)
-    self.y = snap(player.y + 8)
-
-    if self.dragging then
-      self.dragging.x = self.x
-      self.dragging.y = self.y
-    end
+ function cursor:update(player)
+  if btn(a_btn) then
+   self.color = cl_red
+  else
+   self.color = cl_blue
   end
+  self.x = snap(player.x)
+  self.y = snap(player.y + 8)
 
-  function cursor:draw()
-    rect(cursor.x, cursor.y, cursor.x + 8, cursor.y + 8, cursor.color)
+  if self.dragging then
+   self.dragging.x = self.x
+   self.dragging.y = self.y
   end
+ end
 
-  return cursor
+ function cursor:draw()
+  rect(cursor.x, cursor.y, cursor.x + 8, cursor.y + 8, cursor.color)
+ end
+
+ return cursor
 end
 
 function title_screen()
-  local state = {
+ local state = {
 
-  }
+ }
 
-  function state:update()
+ function state:update()
+ end
+
+ function state:handle_input()
+  if btn(a_btn) and btn(b_btn) then
+   global_state = main_screen()
   end
+ end
 
-  function state:handle_input()
-    if btn(a_btn) and btn(b_btn) then
-      global_state = main_screen()
-    end
-  end
+ function state:draw()
+  cls()
+  print("pRESS z + x", 32, 64)
+ end
 
-  function state:draw()
-    cls()
-    print("pRESS z + x", 32, 64)
-  end
-
-  return state
+ return state
 end
 
 function main_screen()
-  local state = {
-    player = Player(),
-    cursor = Cursor(),
-    inventory = Inventory(),
-    dummy = DummyObject(10, 10)
-  }
+ local state = {
+  player = Player(),
+  cursor = Cursor(),
+  inventory = Inventory(),
+  dummy = DummyObject(10, 10)
+ }
 
-  function state:handle_input()
-  end
+ function state:handle_input()
+ end
 
-  function state:update()
-    self.player:update()
-    self.cursor:update(self.player)
-    self.inventory:update(self.cursor)
-    self.dummy:update(self.cursor)
-  end
+ function state:update()
+  self.player:update()
+  self.cursor:update(self.player)
+  self.inventory:update(self.cursor)
+  self.dummy:update(self.cursor)
+ end
 
-  function state:draw()
-    cls() -- clears the screen
-    draw_grid()
-    self.inventory:draw()
-    self.cursor:draw()
-    self.player:draw()
-    self.dummy:draw()
-  end
+ function state:draw()
+  cls() -- clears the screen
+  draw_grid()
+  self.inventory:draw()
+  self.cursor:draw()
+  self.player:draw()
+  self.dummy:draw()
+ end
 
-  return state
+ return state
 end
 
 function snap(i)
-  return flr(i / 8) * 8
+ return flr(i / 8) * 8
 end
 
 function draw_grid()
 
  -- vertical lines
-  for i = 0,120,8
-  do
-    line(i, 0, i, 128, cl_darkgray)
-  end
+ for i = 0,120,8
+ do
+  line(i, 0, i, 128, cl_darkgray)
+ end
 
--- horizontal lines
-  for i = 0,120,8
-  do
-    line( 0, i, 128, i, cl_darkgray)
-  end
+ -- horizontal lines
+ for i = 0,120,8
+ do
+  line( 0, i, 128, i, cl_darkgray)
+ end
 end
 
 function is_between(obj1, obj2, range)
@@ -231,17 +244,17 @@ function is_between(obj1, obj2, range)
 end
 
 function _init()
-  global_state = title_screen()
+ global_state = title_screen()
 end
 
 
 function _update()
-  global_state:handle_input()
-  global_state:update()
+ global_state:handle_input()
+ global_state:update()
 end
 
 function _draw()
-  global_state:draw()
+ global_state:draw()
 end
 
 __gfx__
