@@ -131,8 +131,8 @@ end
 function TextBox()
   local box = {
     x = 0,
-    y = 80,
-    width = 128,
+    y = 72,
+    width = 127,
     height = 32,
     text = ""
   }
@@ -143,6 +143,7 @@ function TextBox()
 
   function box:draw()
     rect(self.x, self.y, self.x + self.width, self.y + self.height, cl_yellow)
+    color(cl_darkgreen)
     print(self.text, self.x + 1, self.y + 1)
   end
 
