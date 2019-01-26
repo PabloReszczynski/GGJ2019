@@ -31,6 +31,7 @@ local cl_peach = 15
 local player
 local cursor
 local dummy_object
+local dummies
 
 function Player()
   local player = {
@@ -63,10 +64,10 @@ function Player()
   return player
 end
 
-function DummyObject()
+function DummyObject(x, y)
   local dummy_object = {
-    x = 8,
-    y = 8,
+    x = snap(x),
+    y = snap(y),
     sprite = 3,
     draggable = false,
     dragged = false,
@@ -78,8 +79,13 @@ function DummyObject()
     end
 
     if btn(a_btn) and self.draggable then
-      self.x = cursor.x
-      self.y = cursor.y
+      if not(cursor.dragging) then
+        cursor.dragging = self
+      end
+    else
+      if cursor.dragging == self then
+        cursor.dragging = false
+      end
     end
 
     if not(is_between(cursor, self)) then
@@ -98,7 +104,8 @@ function Cursor()
   local cursor = {
     x = 0,
     y = 0,
-    color = cl_blue
+    color = cl_blue,
+    dragging = false
   }
 
   function cursor:update()
@@ -107,8 +114,13 @@ function Cursor()
     else
       self.color = cl_blue
     end
-    self.x = flr(player.x / 8) * 8
-    self.y = flr((player.y + 8) / 8) * 8
+    self.x = snap(player.x)
+    self.y = snap(player.y + 8)
+
+    if self.dragging then
+      self.dragging.x = self.x
+      self.dragging.y = self.y
+    end
   end
 
   function cursor:draw()
@@ -116,6 +128,10 @@ function Cursor()
   end
 
   return cursor
+end
+
+function snap(i)
+  return flr(i / 8) * 8
 end
 
 function draw_grid()
@@ -139,14 +155,42 @@ end
 function _init()
   player = Player()
   cursor = Cursor()
-  dummy_object = DummyObject()
+  dummies = {
+    DummyObject(1, 2),
+    DummyObject(2, 4),
+    DummyObject(5, 1),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(7, 10),
+    DummyObject(12, 2)
+  }
 end
 
 
 function _update()
   player:update()
   cursor:update()
-  dummy_object:update()
+  foreach(dummies, function(dum) dum:update() end)
 end
 
 function _draw()
@@ -154,7 +198,7 @@ function _draw()
   draw_grid()
   cursor:draw()
   player:draw()
-  dummy_object:draw()
+  foreach(dummies, function(dum) dum:draw() end)
 end
 
 __gfx__
