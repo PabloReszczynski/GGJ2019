@@ -30,6 +30,7 @@ local cl_peach = 15
 
 local player
 local cursor
+local dummy_object
 
 function make_player()
   local player = {
@@ -40,6 +41,17 @@ function make_player()
     sprite = 2
   }
   return player
+end
+
+function make_dummy_object()
+  local dummy_object = {
+    x = 64,
+    y = 64,
+    vx = 2,
+    vy = 2,
+    sprite = 2
+  }
+  return dummy_object
 end
 
 function draw_player()
@@ -83,6 +95,7 @@ end
 function _init()
   player = make_player()
   cursor = make_cursor()
+  dummy_object = make_dummy_object()
 end
 
 function _update()
