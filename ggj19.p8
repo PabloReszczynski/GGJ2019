@@ -50,6 +50,19 @@ end
 function _draw()
 cls() -- Clears the screen
 circfill(player.x, player.y, 6, player.color)
+
+-- Vertical lines
+for i = 0,120,8
+do
+   line(i, 0, i, 128, 7 )
+end
+
+-- Horizontal lines
+for i = 0,120,8
+do
+   line( 0, i, 128, i, 7 ) 
+end
+
 end
 
 __gfx__
