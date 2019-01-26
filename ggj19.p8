@@ -47,16 +47,16 @@ end
 
 function draw_grid()
  -- Vertical lines
- for i = 0,120,8
- do
+  for i = 0,120,8
+  do
     line(i, 0, i, 128, 7 )
-   end
+  end
 
 -- Horizontal lines
- for i = 0,120,8
- do
+  for i = 0,120,8
+  do
     line( 0, i, 128, i, 7 )
-   end
+  end
 end
 
 function _init()
@@ -82,11 +82,12 @@ function _update()
   if btn(B_btn) then
     player.color = cl_red
   end
+end
 
 function _draw()
   cls() -- Clears the screen
-  draw_player()
   draw_grid()
+  draw_player()
 end
 
 __gfx__
