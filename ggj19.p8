@@ -40,16 +40,16 @@ function Player()
  }
 
  function player:update()
-  if btn(right_btn) then
+  if btn(right_btn) and self.x <= 120 then
    self.x += self.vx
   end
-  if btn(left_btn) then
+  if btn(left_btn) and self.x >= 8 then
    self.x -= self.vx
   end
-  if btn(down_btn) then
+  if btn(down_btn) and self.y <= 112 then
    self.y += self.vy
   end
-  if btn(up_btn) then
+  if btn(up_btn) and self.y >= 0 then
    self.y -= self.vy
   end
  end
