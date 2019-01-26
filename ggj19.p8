@@ -29,6 +29,7 @@ local cl_pink = 14
 local cl_peach = 15
 
 local player
+local dummy_object
 
 function make_player()
   local player = {
@@ -39,6 +40,15 @@ function make_player()
     color = cl_blue
   }
   return player
+end
+
+function make_dummy_object()
+  local dummy_object = {
+    x = 64,
+    y = 64,
+    color = cl_peach
+  }
+  return dummy_object
 end
 
 function draw_grid()
@@ -57,6 +67,7 @@ end
 
 function _init()
   player = make_player()
+  dummy_object = make_dummy_object()
 end
 
 function _update()
