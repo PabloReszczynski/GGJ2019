@@ -88,6 +88,18 @@ function dummycharacter()
    state.textbox.text = self.description
   end
 
+  if is_between(state.cursor, self, 8) and btn(a_btn) then
+    local alt = alternative(
+      state,
+      "me quieres?",
+      "si",
+      "no",
+      ":)",
+      ":("
+    )
+    alt:activate()
+  end
+
   local direction = flr(rnd(40))
 
   if direction == 0 and self.x <= 120 then
@@ -134,6 +146,77 @@ function mkmap(cel_x, cel_y, sx, sy, celw, celh, entities)
  return mapa
 end
 
+function button(x, y)
+  local noop = function() return nil end
+
+  local butt = {
+    x = x * 8,
+    y = y * 8,
+    active = false,
+    text = "",
+    action = noop
+  }
+
+  function butt:activate(text, action)
+    self.active = true
+    self.text = text
+    self.action = action
+  end
+
+  function butt:deactivate()
+    self.active = false
+    self.text = ""
+    self.action = noop
+  end
+
+  function butt:update(state)
+    if self.active and is_between(state.cursor, self, 32) and btn(a_btn) then
+      self.action()
+    end
+  end
+
+  function butt:draw()
+    if self.active then
+      print(self.text, self.x + 8, self.y + 8, cl_yellow)
+    end
+  end
+
+  return butt
+end
+
+function alternative(state, text, left, right, result_left, result_right)
+  local alt = {
+    text = text,
+    left = left,
+    right = right,
+    result_left = result_left,
+    result_right = result_right
+  }
+
+  local left_action = function()
+    state.textbox.text = result_left
+  end
+
+  local right_action = function()
+    state.textbox.text = result_right
+  end
+
+  function alt:activate()
+    state.textbox.text = self.text
+    state.textbox.fixed = true
+    state.left_button:activate(self.left, left_action)
+    state.right_button:activate(self.right, right_action)
+  end
+
+  function alt:deactivate()
+    state.textbox.fixed = false
+    state.left_button:deactivate()
+    state.right_button:deactivate()
+  end
+
+  return alt
+end
+
 function inventory()
  local inventory = {
   x = 40,
@@ -174,11 +257,14 @@ function textbox()
     y = 80,
     width = 127,
     height = 16,
-    text = ""
+    text = "",
+    fixed = false
   }
 
   function box:update()
-    self.text = ""
+    if not(self.fixed) then
+      self.text = ""
+    end
   end
 
   function box:draw()
@@ -361,6 +447,8 @@ function main_screen()
   inventory = inventory(),
   textbox = textbox(),
   map = main_zone,
+  left_button = button(0, 13),
+  right_button = button(12, 13)
  }
 
  function state:handle_input()
@@ -372,6 +460,8 @@ function main_screen()
   self.textbox:update()
   self.map:update(self)
   self.inventory:update(self)
+  self.left_button:update(self)
+  self.right_button:update(self)
  end
 
  function state:draw()
@@ -382,6 +472,8 @@ function main_screen()
   self.cursor:draw()
   self.textbox:draw()
   self.player:draw()
+  self.left_button:draw(self)
+  self.right_button:draw(self)
  end
 
  return state
@@ -542,8 +634,8 @@ library = mkmap(48, 0, 0, 0, 128, 128, {
   dummy(3, 3, 102, "deja eso, come mas fruta."),
   dummy(5, 3, 76, "no levantes cosas de la calle."),
 
-  dummy(10, 3, 104, "¿ya comiste hoy?."),
-  dummy(12, 3, 102, "¿que estas esperando?."),
+  dummy(10, 3, 104, "ya comiste hoy?"),
+  dummy(12, 3, 102, "que estas esperando?"),
  dummy(14, 3, 104, "enviame un mensaje cuando\nllegues."),
 
   dummy(0, 6, 104, "para crecer sano, come cereal, 14 veces al dia."),
@@ -564,11 +656,11 @@ library = mkmap(48, 0, 0, 0, 128, 128, {
 
   -- people
   dummy(2, 8, 110, "me gusta la comida", 1, 2),
-  dummy(3, 8, 109, "¿te gustan los libros?", 1, 2),
-  dummy(8, 6, 103, "no lo escuches\n quiereme", 1, 2, { 103, 96 }), --perro negro
+  dummy(3, 8, 109, "te gustan los libros?", 1, 2),
+  dummy(8, 6, 103, "no lo escuches\nquiereme", 1, 2, { 103, 96 }), --perro negro
   dummy(10, 8, 106, "woof", 1, 2, { 106, 97 }), --perro blanco
-  dummy(9, 6, 77, "bienvenidos!, \nno toques a maicol.", 1, 2),
-  dummy(11, 8, 78, "QUIERO PALTA!", 2, 2),
+  dummy(9, 6, 77, "bienvenidos!,\nno toques a maicol.", 1, 2),
+  dummy(11, 8, 78, "quiero palta!", 2, 2),
 
   -- corasom
   dummy(2, 7, 105, "♥"),
