@@ -569,20 +569,20 @@ main_zone = mkmap(0, 0, 0, 0, 16, 16, {
   dummy(15, 8, 1, "un mueble.")
 })
 bar = mkmap(16, 0, 0, 0, 128, 128, {
-  dummy(1, 4, 150, "una lampara.", 1, 1, { 150, 166, 182 }),
-  dummy(3, 4, 168, "una lampara?", 1, 1, { 168, 184 }),
-  dummy(3, 5, 152, ""),
-  dummy(5, 2, 135, "una lampara de cielo."),
-  dummy(6, 2, 135, "una lampara de cielo."),
+  dummy(1, 4, 150, "un letrero de neon.\n su brillo molesta los ojos,\n pero verlo es hipnotico", 1, 1, { 150, 166, 182 }),
+  dummy(3, 4, 168, "una mascara?.\n parece la cabeza de un\n monstruo… de plastico.", 1, 1, { 168, 184 }),
+  dummy(3, 5, 152, "una mascara tribal.\n al bartender le gustan \nlos adornos excentricos"),
+  dummy(5, 2, 135, "una lampara retro.\n lo que fue fuera de moda\n es moda en el hoy."),
+  dummy(6, 2, 135, "una lampara retro.\n lo que fue fuera de moda\n es moda en el hoy."),
   dummy(9, 2, 135, "una lampara de cielo."),
-  dummy(10, 2, 135, "una lampara de cielo."),
+  dummy(10, 2, 135, "un cielo de lamparas."),
   dummy(0, 6, 154, "una rocola.", 1, 3),
-  dummy(2, 7, 141, "una osita.", 1, 2), --osito 1
-  dummy(3, 7, 137, "otra rocola.", 1, 1),
-  dummy(3, 8, 153, "otra rocola.", 1, 1, { 153, 169, 185, 138 }),
+  dummy(2, 7, 141, "dejare mis tierras por ti,\n dejare mis campos y me ire\n lejos de aqui...", 1, 2), --osito 1
+  dummy(3, 7, 137, "un tocadisco.\n su buenos clasicos despues\n del estres de la vida.", 1, 1),
+  dummy(3, 8, 153, "un tocadisco.\n su buenos clasicos despues\n del estres de la vida.", 1, 1, { 153, 169, 185, 138 }),
 
   -- bartender
-  dummy(9, 6, 139, "el bartender", 1, 2),
+  dummy(9, 6, 139, "nuevo por aca?\n si quieres pasar un buen rato,\n te invito tu primera copa.", 1, 2),
 
   -- mesa
   dummy(4, 7, 14, "", 1, 2), -- lado izquierdo
@@ -601,11 +601,11 @@ bar = mkmap(16, 0, 0, 0, 128, 128, {
   dummy(14, 6, 136, "un tablero de dardos."),
 
   -- comensales
-  dummy(5, 7, 173, "un osito.", 1, 2), -- osito 2
+  dummy(5, 7, 173, "la musica me da vida,\n pero no soy bueno bailando.\n compensa bastante.", 1, 2), -- osito 2
   dummy(7, 7, 140, "un osito.", 1, 2), -- osito 3
   dummy(8, 7, 172, "rancagua no existe.", 1, 2), -- ratoncito
-  dummy(13, 7, 174, "un oso.", 1, 2), -- oso
-  dummy(15, 7, 142, "una osa.", 1, 2), -- osa
+  dummy(13, 7, 174, "(su concentracion es admirable,\n pero los dardos se han\n clavado en la muralla).", 1, 2), -- oso
+  dummy(15, 7, 142, "jugar a los dardos es su pasion.\n Espero que algun dia acierte\n al blanco...", 1, 2), -- osa
 
 })
 
