@@ -499,12 +499,16 @@ function enter_zone(state, x, y)
  local map_tile = map_pos(x, y, state.map.n)
  if (fget(map_tile, 1)) then
   state.map = bar
+  music(10)
  elseif (fget(map_tile, 2)) then
   state.map = bakery
+  music(17)
  elseif (fget(map_tile, 3)) then
   state.map = library
+  music(19)
  elseif (fget(map_tile, 4)) then
   state.map = main_zone
+  music(0)
  end
  printh(map_tile, "oka.txt")
 end
@@ -606,12 +610,13 @@ bar = mkmap(16, 0, 0, 0, 128, 128, {
 })
 
 bakery = mkmap(32, 0, 0, 0, 128, 128, {
-  dummy(1, 3, 195, "tic toc\ndate un tiempo para ti mismo."), --reloj
+  dummy(1, 3, 195, "el tiempo es una ilusion."), --reloj
 
   -- mesa1
   dummy(1, 7, 216, "una mesa."), -- izquierda
   dummy(2, 7, 200, ""), --centro
   dummy(3, 7, 217, "una mesa."), -- derecha
+  dummy(2, 7, 227, "que?\n la comida no habla"), -- patas
   dummy(1, 8, 240, "una mesa.", 3, 1), -- patas
 
   --pisos
@@ -619,8 +624,8 @@ bakery = mkmap(32, 0, 0, 0, 128, 128, {
   dummy(4, 8, 250, "un piso."),
 
   -- plantas
-  dummy(4, 4, 201, "unas plantas preciosas.", 2, 1),
-  dummy(7, 3, 201, "somos hermosas.", 2, 1),
+  dummy(4, 4, 201, "awa", 2, 1),
+  dummy(7, 3, 201, "uwu", 2, 1),
 
   -- caja
   dummy(7, 5, 231, ""),
@@ -631,25 +636,26 @@ bakery = mkmap(32, 0, 0, 0, 128, 128, {
   dummy(10, 5, 233, ""),
   dummy(7, 6, 243, "", 2),
   dummy(9, 6, 244, "", 2),
-  dummy(11, 6, 193, "la cajera."),
-  dummy(12, 6, 226, "la cajera."),
+  dummy(11, 6, 193, "desde galletas hasta pastel\n tengo de todo para usted", 1,1,{193,194}),
+  dummy(12, 6, 226, "...\n necesito ...\n dinero ..."),
   dummy(7, 7, 247, "", 3),
   dummy(10, 7, 224, ""),
   dummy(11, 7, 224, "", 2),
 
   -- sapi
-  dummy(5, 6, 203, "una sapa.", 1, 2),
+  dummy(5, 6, 203, "*plic ploc*\n con mis botitas voy a salpicar", 1, 2),
 
   --cuadro
-  dummy(11, 3, 196, "un lindo cuadro.", 2, 2),
+  dummy(11, 3, 196, "algo dulce en tu dia\n alegrara tu vida", 2, 2),
 
   --comensall
-  dummy(11, 8, 235, "un perro.", 1, 2),
+  dummy(11, 8, 235, "hotcakes y un tecito\n para un dia bonito\n como tu", 1, 2),
 
   -- mesa 2
   dummy(12, 8, 216, "una mesa."), -- izquierda
   dummy(13, 8, 200, ""), --centro
   dummy(14, 8, 217, "una mesa."), -- derecha
+  dummy(13, 8, 211, "ser comido o no ser comido"), -- patas
   dummy(12, 9, 240, "una mesa.", 3, 1), -- patas
   dummy(15, 9, 250, "un piso."),
 })
@@ -932,4 +938,3 @@ __music__
 04 27292b44
 00 41424344
 01 53535649
-
