@@ -569,20 +569,20 @@ main_zone = mkmap(0, 0, 0, 0, 16, 16, {
   dummy(15, 8, 1, "un mueble.")
 })
 bar = mkmap(16, 0, 0, 0, 128, 128, {
-  dummy(1, 4, 150, "un letrero de neon.\n su brillo molesta los ojos,\n pero verlo es hipnotico", 1, 1, { 150, 166, 182 }),
-  dummy(3, 4, 168, "una mascara?.\n parece la cabeza de un\n monstruo… de plastico.", 1, 1, { 168, 184 }),
-  dummy(3, 5, 152, "una mascara tribal.\n al bartender le gustan \nlos adornos excentricos"),
-  dummy(5, 2, 135, "una lampara retro.\n lo que fue fuera de moda\n es moda en el hoy."),
-  dummy(6, 2, 135, "una lampara retro.\n lo que fue fuera de moda\n es moda en el hoy."),
+  dummy(1, 4, 150, "un letrero de neon.\nsu brillo molesta los ojos,\npero verlo es hipnotico", 1, 1, { 150, 166, 182 }),
+  dummy(3, 4, 168, "una mascara?.\nparece la cabeza de un\nmonstruo… de plastico.", 1, 1, { 168, 184 }),
+  dummy(3, 5, 152, "una mascara tribal.\nal bartender le gustan \nlos adornos excentricos"),
+  dummy(5, 2, 135, "una lampara retro.\nlo que fue fuera de moda\nes moda en el hoy."),
+  dummy(6, 2, 135, "una lampara retro.\nlo que fue fuera de moda\nes moda en el hoy."),
   dummy(9, 2, 135, "una lampara de cielo."),
   dummy(10, 2, 135, "un cielo de lamparas."),
   dummy(0, 6, 154, "una rocola.", 1, 3),
-  dummy(2, 7, 141, "dejare mis tierras por ti,\n dejare mis campos y me ire\n lejos de aqui...", 1, 2), --osito 1
-  dummy(3, 7, 137, "un tocadisco.\n su buenos clasicos despues\n del estres de la vida.", 1, 1),
-  dummy(3, 8, 153, "un tocadisco.\n su buenos clasicos despues\n del estres de la vida.", 1, 1, { 153, 169, 185, 138 }),
+  dummy(2, 7, 141, "dejare mis tierras por ti,\ndejare mis campos y me ire\nlejos de aqui...", 1, 2), --osito 1
+  dummy(3, 7, 137, "un tocadisco.\nsu buenos clasicos despues\ndel estres de la vida.", 1, 1),
+  dummy(3, 8, 153, "un tocadisco.\nsu buenos clasicos despues\ndel estres de la vida.", 1, 1, { 153, 169, 185, 138 }),
 
   -- bartender
-  dummy(9, 6, 139, "nuevo por aca?\n si quieres pasar un buen rato,\n te invito tu primera copa.", 1, 2),
+  dummy(9, 6, 139, "nuevo por aca?\nsi quieres pasar un buen rato,\nte invito tu primera copa.", 1, 2),
 
   -- mesa
   dummy(4, 7, 14, "", 1, 2), -- lado izquierdo
@@ -604,8 +604,8 @@ bar = mkmap(16, 0, 0, 0, 128, 128, {
   dummy(5, 7, 173, "la musica me da vida,\n pero no soy bueno bailando.\n compensa bastante.", 1, 2), -- osito 2
   dummy(7, 7, 140, "un osito.", 1, 2), -- osito 3
   dummy(8, 7, 172, "rancagua no existe.", 1, 2), -- ratoncito
-  dummy(13, 7, 174, "(su concentracion es admirable,\n pero los dardos se han\n clavado en la muralla).", 1, 2), -- oso
-  dummy(15, 7, 142, "jugar a los dardos es su pasion.\n Espero que algun dia acierte\n al blanco...", 1, 2), -- osa
+  dummy(13, 7, 174, "(su concentracion es admirable,\npero los dardos se han\n clavado en la muralla).", 1, 2), -- oso
+  dummy(15, 7, 142, "jugar a los dardos es su pasion.\nespero que algun dia acierte\n al blanco...", 1, 2), -- osa
 
 })
 
@@ -616,7 +616,7 @@ bakery = mkmap(32, 0, 0, 0, 128, 128, {
   dummy(1, 7, 216, "una mesa."), -- izquierda
   dummy(2, 7, 200, ""), --centro
   dummy(3, 7, 217, "una mesa."), -- derecha
-  dummy(2, 7, 227, "que?\n la comida no habla"), -- patas
+  dummy(2, 7, 227, "que?\nla comida no habla"), -- patas
   dummy(1, 8, 240, "una mesa.", 3, 1), -- patas
 
   --pisos
@@ -637,19 +637,19 @@ bakery = mkmap(32, 0, 0, 0, 128, 128, {
   dummy(7, 6, 243, "", 2),
   dummy(9, 6, 244, "", 2),
   dummy(11, 6, 193, "desde galletas hasta pastel\n tengo de todo para usted", 1,1,{193,194}),
-  dummy(12, 6, 226, "...\n necesito ...\n dinero ..."),
+  dummy(12, 6, 226, "dinero ...\nnecesito ...\ndinero ..."),
   dummy(7, 7, 247, "", 3),
   dummy(10, 7, 224, ""),
   dummy(11, 7, 224, "", 2),
 
   -- sapi
-  dummy(5, 6, 203, "*plic ploc*\n con mis botitas voy a salpicar", 1, 2),
+  dummy(5, 6, 203, "*plic ploc*\ncon mis botitas voy a salpicar", 1, 2),
 
   --cuadro
-  dummy(11, 3, 196, "algo dulce en tu dia\n alegrara tu vida", 2, 2),
+  dummy(11, 3, 196, "algo dulce en tu dia\nalegrara tu vida", 2, 2),
 
   --comensall
-  dummy(11, 8, 235, "hotcakes y un tecito\n para un dia bonito\n como tu", 1, 2),
+  dummy(11, 8, 235, "hotcakes y un tecito\npara un dia bonito,\ncomo tu", 1, 2),
 
   -- mesa 2
   dummy(12, 8, 216, "una mesa."), -- izquierda
