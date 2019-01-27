@@ -602,11 +602,11 @@ bar = mkmap(16, 0, 0, 0, 128, 128, {
   dummy(14, 6, 136, "un tablero de dardos."),
 
   -- comensales
-  dummy(5, 7, 173, "la musica me da vida,\n pero no soy bueno bailando.\n compensa bastante.", 1, 2), -- osito 2
+  dummy(5, 7, 173, "la musica me da vida,\npero no soy bueno bailando.\ncompensa bastante.", 1, 2), -- osito 2
   dummy(7, 7, 140, "un osito.", 1, 2), -- osito 3
   dummy(8, 7, 172, "rancagua no existe.", 1, 2), -- ratoncito
-  dummy(13, 7, 174, "(su concentracion es admirable,\npero los dardos se han\n clavado en la muralla).", 1, 2), -- oso
-  dummy(15, 7, 142, "jugar a los dardos es su pasion.\nespero que algun dia acierte\n al blanco...", 1, 2), -- osa
+  dummy(13, 7, 174, "(su concentracion es admirable,\npero los dardos se han\nclavado en la muralla).", 1, 2), -- oso
+  dummy(15, 7, 142, "jugar a los dardos es su pasion.\nespero que algun dia acierte\nal blanco...", 1, 2), -- osa
 
 })
 
@@ -637,7 +637,7 @@ bakery = mkmap(32, 0, 0, 0, 128, 128, {
   dummy(10, 5, 233, ""),
   dummy(7, 6, 243, "", 2),
   dummy(9, 6, 244, "", 2),
-  dummy(11, 6, 193, "desde galletas hasta pastel\n tengo de todo para usted", 1,1,{193,194}),
+  dummy(11, 6, 193, "desde galletas hasta pastel\ntengo de todo para usted", 1,1,{193,194}),
   dummy(12, 6, 226, "dinero ...\nnecesito ...\ndinero ..."),
   dummy(7, 7, 247, "", 3),
   dummy(10, 7, 224, ""),
