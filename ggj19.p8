@@ -75,7 +75,7 @@ end
 function dummycharacter()
  local dummy_character = {
   x = 16,
-  y = 16,
+  y = 240,
   vx = 3,
   vy = 3,
   sprites = {220,221,220,221},
@@ -939,4 +939,3 @@ __music__
 04 27292b44
 00 41424344
 01 53535649
-
