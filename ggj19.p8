@@ -51,16 +51,16 @@ function player()
  }
 
  function player:update()
-  if btn(right_btn) then
+  if btn(right_btn) and self.x < 126 then
    self.x += self.vx
   end
-  if btn(left_btn) then
+  if btn(left_btn) and self.x > 0 then
    self.x -= self.vx
   end
-  if btn(down_btn) then
+  if btn(down_btn) and self.y < 116 then
    self.y += self.vy
   end
-  if btn(up_btn) then
+  if btn(up_btn) and self.y >= 0 then
     self.y -= self.vy
   end
  end
@@ -78,7 +78,7 @@ function dummycharacter()
   y = 16,
   vx = 3,
   vy = 3,
-  sprites = {15,31,47,63},
+  sprites = {220,221,220,221},
   counter = 0,
   description = "un gatito.",
  }
@@ -91,19 +91,19 @@ function dummycharacter()
   local direction = flr(rnd(40))
 
   if direction == 0 and self.x <= 120 then
-   move(self, self.vx, 0)
+   move(self, self.vx, 0, state.map.n)
    self.counter = (self.counter + 1) % 4
   end
   if direction == 1 and self.x >= 8 then
-   move(self, -self.vx, 0)
+   move(self, -self.vx, 0, state.map.n)
    self.counter = (self.counter + 1) % 4
   end
   if direction == 2 and self.y <= 112 then
-   move(self, 0, self.vy)
+   move(self, 0, self.vy, state.map.n)
    self.counter = (self.counter + 1) % 4
   end
   if direction == 3 and self.y >= 0 then
-    move(self, 0, -self.vy)
+    move(self, 0, -self.vy, state.map.n)
    self.counter = (self.counter + 1) % 4
   end
 
@@ -118,7 +118,8 @@ end
 
 function mkmap(cel_x, cel_y, sx, sy, celw, celh, entities)
  local mapa = {
-   entities = entities
+   entities = entities,
+   n = flr(cel_x/16)
  }
 
  function mapa:update(state)
@@ -159,7 +160,7 @@ function inventory()
 
  function inventory:draw()
   if self.visible then
-   rectfill(self.x,self.y,self.x_end,self.y_end, cl_yellow)
+   rectfill(self.x,self.y,self.x_end,self.y_end, cl_peach)
    foreach(self.slots, function(slot) slot:draw() end)
   end
  end
@@ -213,7 +214,7 @@ function inventoryslot(x, y)
  end
 
  function slot:draw()
-  spr(4, self.x, self.y)
+  spr(177, self.x, self.y)
   if self.object then
     self.object:draw(true)
   end
@@ -359,7 +360,7 @@ function main_screen()
   cursor = cursor(),
   inventory = inventory(),
   textbox = textbox(),
-  map = bakery,
+  map = main_zone,
  }
 
  function state:handle_input()
@@ -386,14 +387,14 @@ function main_screen()
  return state
 end
 
-function map_pos(x, y)
-  return mget(flr(x / 8), flr((y - 1) / 8))
+function map_pos(x, y, n)
+  return mget(flr((x + 128 * n)/ 8), flr(y / 8))
 end
 
-function move(object, dir_x, dir_y)
+function move(object, dir_x, dir_y, n)
   local next_x = object.x + dir_x
   local next_y = object.y + dir_y
-  local map_tile = map_pos(next_x, next_y)
+  local map_tile = map_pos(next_x, next_y, n)
   if not(fget(map_tile, 0)) then
     object.x = next_x
     object.y = next_y
@@ -401,7 +402,7 @@ function move(object, dir_x, dir_y)
 end
 
 function enter_zone(state, x, y)
- local map_tile = map_pos(x, y)
+ local map_tile = map_pos(x, y, state.map.n)
  if (fget(map_tile, 1)) then
   state.map = bar
  elseif (fget(map_tile, 2)) then
@@ -411,7 +412,7 @@ function enter_zone(state, x, y)
  elseif (fget(map_tile, 4)) then
   state.map = main_zone
  end
- print(map_tile)
+ printh(map_tile, "oka.txt")
 end
 
 function snap(i)
@@ -443,7 +444,7 @@ end
 
 main_zone = mkmap(0, 0, 0, 0, 16, 16, {
   dummycharacter(),
-  dummyobject(16, 16, "un mueble.")
+  dummyobject(16, 16, "un mueble."),
 })
 bar = mkmap(16, 0, 0, 0, 128, 128, {
   dummy(1, 4, 150, "una lampara.", 1, 1, { 150, 166, 182 }),
@@ -480,14 +481,14 @@ bar = mkmap(16, 0, 0, 0, 128, 128, {
   -- comensales
   dummy(5, 7, 173, "un osito.", 1, 2), -- osito 2
   dummy(7, 7, 140, "un osito.", 1, 2), -- osito 3
-  dummy(8, 7, 172, "un ratoncito.", 1, 2), -- ratoncito
+  dummy(8, 7, 172, "rancagua no existe.", 1, 2), -- ratoncito
   dummy(13, 7, 174, "un oso.", 1, 2), -- oso
   dummy(15, 7, 142, "una osa.", 1, 2), -- osa
 
 })
 
 bakery = mkmap(32, 0, 0, 0, 128, 128, {
-  dummy(1, 3, 195, "un reloj."), --reloj
+  dummy(1, 3, 195, "tic toc\ndate un tiempo para ti mismo."), --reloj
 
   -- mesa1
   dummy(1, 7, 216, "una mesa."), -- izquierda
@@ -500,8 +501,8 @@ bakery = mkmap(32, 0, 0, 0, 128, 128, {
   dummy(4, 8, 250, "un piso."),
 
   -- plantas
-  dummy(4, 4, 201, "unas plantas.", 2, 1),
-  dummy(7, 3, 201, "unas plantas.", 2, 1),
+  dummy(4, 4, 201, "unas plantas preciosas.", 2, 1),
+  dummy(7, 3, 201, "somos hermosas.", 2, 1),
 
   -- caja
   dummy(7, 5, 231, ""),
@@ -537,37 +538,37 @@ bakery = mkmap(32, 0, 0, 0, 128, 128, {
 
 library = mkmap(48, 0, 0, 0, 128, 128, {
   -- plantas
-  dummy(1, 3, 76, "una planta."),
-  dummy(3, 3, 102, "una planta."),
-  dummy(5, 3, 76, "una planta."),
+  dummy(1, 3, 76, "duchate y cepillate los dientes."),
+  dummy(3, 3, 102, "deja eso, come mas fruta."),
+  dummy(5, 3, 76, "no levantes cosas de la calle."),
 
-  dummy(10, 3, 104, "una planta."),
-  dummy(12, 3, 102, "una planta."),
-  dummy(14, 3, 104, "una planta."),
+  dummy(10, 3, 104, "¿ya comiste hoy?."),
+  dummy(12, 3, 102, "¿que estas esperando?."),
+ dummy(14, 3, 104, "enviame un mensaje cuando\nllegues."),
 
-  dummy(0, 6, 104, "una planta."),
-  dummy(6, 6, 102, "una planta."),
-  dummy(4, 7, 102, "una planta."),
-  dummy(13, 6, 118, "una planta."),
+  dummy(0, 6, 104, "para crecer sano, come cereal, 14 veces al dia."),
+  dummy(6, 6, 102, "no soy una simple planta, soy\nuna futura palta imperial."),
+  dummy(4, 7, 102, "quiereme."),
+  dummy(13, 6, 118, "vete pronto."),
 
   -- libross
-  dummy(0, 7, 70, "un librero.", 2, 2),
-  dummy(6, 7, 70, "un librero.", 2, 2),
+  dummy(0, 7, 70, "la paradoja de la informacion.", 2, 2),
+  dummy(6, 7, 70, "elije cualquier libro, humano.", 2, 2),
 
-  dummy(4, 8, 92, "un librero.", 1, 2),
-  dummy(9, 8, 92, "un librero.", 1, 2),
-  dummy(13, 7, 92, "un librero.", 1, 2),
+  dummy(4, 8, 92, "la tierra del fuego.", 1, 2),
+  dummy(9, 8, 92, "un respiro de vida.", 1, 2),
+  dummy(13, 7, 92, "100 anos de felicidad.", 1, 2),
 
   -- lamp
   dummy(5, 7, 107, "una lampara.", 1, 2),
 
   -- people
-  dummy(2, 8, 110, "", 1, 2),
-  dummy(3, 8, 109, "", 1, 2),
-  dummy(8, 6, 103, "un perrrrrito!", 1, 2, { 103, 96 }), --perro negro
-  dummy(10, 8, 106, "un perrrrrito!", 1, 2, { 106, 97 }), --perro blanco
-  dummy(9, 6, 77, "", 1, 2),
-  dummy(11, 8, 78, "", 2, 2),
+  dummy(2, 8, 110, "me gusta la comida", 1, 2),
+  dummy(3, 8, 109, "¿te gustan los libros?", 1, 2),
+  dummy(8, 6, 103, "no lo escuches\n quiereme", 1, 2, { 103, 96 }), --perro negro
+  dummy(10, 8, 106, "woof", 1, 2, { 106, 97 }), --perro blanco
+  dummy(9, 6, 77, "bienvenidos!, \nno toques a maicol.", 1, 2),
+  dummy(11, 8, 78, "QUIERO PALTA!", 2, 2),
 
   -- corasom
   dummy(2, 7, 105, "♥"),
@@ -696,14 +697,14 @@ dddddddd022444e0022444e061117716004555588585540000777700e000000eddddd6dd000b3390
 dddddddd044444400444444006111160004555555555540000444400e000000edddddddd00003b00003b00000ba33ab0a66666666666666a6666666600000000
 dddddddd000444400004444000666600004555555c55540000044000e000000eddd6dddd88888888888888880baaaab0a66666666666666a6666666600000000
 dddddddd0406466000064660000000000045c5c5cc55540000000000e000000edddddddd0eeeeeeeeeeeeee00ba7aab096666666666666696666666600000000
-777777770446e6400046e64000000000004555555555540000000000e000000e0000000000000000dddddddd0bb4aab000000000000000000000000000000000
-7f777f770006d6400046d64000000000004555555555540007000000e000000e0000000000000000dddddddd0aa4aaa000000000000000000000000000000000
-77777777000666400046664000444400004555555575540000700000e000000e0000000000000000dddddddd0aaaaaa000000000000000000000000000000000
-77f7777f0006666000066660044a944000455757575554000999a000e000000e0000dddddddd0000dddddddd00b00b0000000000000000000000000000000000
-77777f7700040040000400400f4444f0004555555555e4000999a99077777777000dddddddddd0007777777700b00b0000000000000000000000000000000000
-77777777000400400004004004f9ff4000455555555ee4000999a0907f777f7700ddd6dddddddd007f777f7700b00b0000000000000000000000000000000000
-777f777f00040040000400400f4a44f000444444444444000999a9907777777700dddddddd6ddd007777777700a00a0000000000000000000000000000000000
-77777777004404400044044000f9ff0000000000000000000999a00077f7777f00dddddddddddd0077f7777f0aa0aa0000000000000000000000000000000000
+777777770446e6400046e64000000000004555555555540000000000e000000e0000000000000000dddddddd0bb4aab004040000040000000000000000000000
+7f777f770006d6400046d64000000000004555555555540007000000e000000e0000000000000000dddddddd0aa4aaa004440000044440000000000000000000
+77777777000666400046664000444400004555555575540000700000e000000e0000000000000000dddddddd0aaaaaa00d4d00900d4d00000000000000000000
+77f7777f0006666000066660044a944000455757575554000999a000e000000e0000dddddddd0000dddddddd00b00b0004440040044400490000000000000000
+77777f7700040040000400400f4444f0004555555555e4000999a99077777777000dddddddddd0007777777700b00b0000400090004000900000000000000000
+77777777000400400004004004f9ff4000455555555ee4000999a0907f777f7700ddd6dddddddd007f777f7700b00b0000444440004444400000000000000000
+777f777f00040040000400400f4a44f000444444444444000999a9907777777700dddddddd6ddd007777777700a00a0000444000044440000000000000000000
+77777777004404400044044000f9ff0000000000000000000999a00077f7777f00dddddddddddd0077f7777f0aa0aa0000404000000040000000000000000000
 eeeeeeeeeeeeeeee00000000000000000047f4000047b40000000000000000000000000000000000000000000000000000000000000000000000000000000000
 ddddddddddddddd0000000000000000004ff7f4004bb7b4007000000000000000000000000000000000000000000000000000000000000000000000000000000
 ddddddddddd6ddd00000000000449400004ff400004bb40000700000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -721,8 +722,8 @@ ddddddddddddddd0008222200000000000000000000000000111d000000088888888888888888000
 060000000000000000000060076666282668f8666bbb60000888e880016666666666166666666671060006000600060f00000000000000000000000000000000
 0100000000000000000000101111111111111111111110000888e000011111111111111111111111060006000600060f00000000000000000000000000000000
 __gff__
-0101010100000100010000000000000001010101000003010100000000000000000000000000000101000000000000000100000000000001010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0101010100000103050800000000000001010101000001010100000000000000000000000000000101000000000000000100000000000001010000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0000000000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __map__
 160607181716081827160638181709a1160607181716081827160638181709a1160607181716081827160638181709a1160607181716081827160638181709a100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 1a2a2a2a2a2a2a2a2a2a2a2a2a2a2a3a1a2a2a2a2a2a2a2a2a2a2a2a2a2a2a3a1a2a2a2a2a2a2a2a2a2a2a2a2a2a2a3a1a2a2a2a2a2a2a2a2a2a2a2a2a2a2a3a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -813,4 +814,3 @@ __music__
 04 27292b44
 00 41424344
 01 53535649
-
