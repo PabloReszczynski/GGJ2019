@@ -30,7 +30,6 @@ local cl_peach = 15
 
 local global_state
 
-
 local v_flip_sprites = {
 }
 
@@ -105,20 +104,22 @@ function dummycharacter()
   end
   if direction == 3 and self.y >= 0 then
     move(self, 0, -self.vy)
-   self.counter = ((self.counter + 1) % 4) + 1
+   self.counter = (self.counter + 1) % 4
   end
 
  end
 
  function dummy_character:draw()
-  spr(self.sprites[self.counter], self.x, self.y)
+  spr(self.sprites[self.counter + 1], self.x, self.y)
  end
 
  return dummy_character
 end
 
 function mkmap(cel_x, cel_y, sx, sy, celw, celh, entities)
- local mapa = {entities = entities}
+ local mapa = {
+   entities = entities
+ }
 
  function mapa:update(state)
   foreach(self.entities, function(e) e:update(state) end)
@@ -147,10 +148,10 @@ function inventory()
   },
  }
 
- function inventory:update(cursor)
-  if is_between(cursor,self, 48) then
+ function inventory:update(state)
+  if is_between(state.cursor,self, 48) then
    self.visible = true
-   foreach(self.slots, function(slot) slot:update(cursor.dragging) end)
+   foreach(self.slots, function(slot) slot:update(state.cursor.dragging, state) end)
   else
    self.visible = false
   end
@@ -195,22 +196,27 @@ function inventoryslot(x, y)
   y = y * 8,
  }
 
- function slot:update(object)
+ function slot:update(object, state)
   if object then
     if is_between(self, object, 8) then
      self.object = object
      self.object.inventory = true
+     del(state.map.entitites, object)
     elseif self.object == object then
       self.object = nil
       object.inventory = false
+      add(state.map.entities, object)
     end
+  end
+  if self.object then
+    self.object:update(state)
   end
  end
 
  function slot:draw()
   spr(4, self.x, self.y)
   if self.object then
-    self.object:draw()
+    self.object:draw(true)
   end
  end
 
@@ -228,29 +234,31 @@ function dummyobject(x, y, description)
   description = description
  }
 
- function dummy_object:update(cursor, textbox)
-  if is_between(cursor, self, 8) then
+ function dummy_object:update(state)
+  if is_between(state.cursor, self, 8) then
    self.draggable = true
-   textbox.text = self.description
+   state.textbox.text = self.description
   end
 
   if btn(a_btn) and self.draggable then
-   if not(cursor.dragging) then
-    cursor.dragging = self
+   if not(state.cursor.dragging) then
+    state.cursor.dragging = self
    end
   else
-   if cursor.dragging == self then
-    cursor.dragging = false
+   if state.cursor.dragging == self then
+    state.cursor.dragging = false
    end
   end
 
-  if not(is_between(cursor, self, 8)) then
+  if not(is_between(state.cursor, self, 8)) then
    self.draggable = false
   end
  end
 
- function dummy_object:draw()
-  spr(self.sprite, self.x, self.y)
+ function dummy_object:draw(from_inventory)
+   if not(self.inventory) or from_inventory then
+    spr(self.sprite, self.x, self.y)
+   end
  end
 
  return dummy_object
@@ -314,12 +322,10 @@ end
 function main_screen()
  local state = {
   player = player(),
-  --dummy_character = dummycharacter(),
   cursor = cursor(),
   inventory = inventory(),
-  dummy = dummyobject(10, 10, "un mueble."),
   textbox = textbox(),
-  map = mkmap(0,0,0,0,16,16, {dummycharacter()}),
+  map = main_zone,
  }
 
  function state:handle_input()
@@ -329,10 +335,8 @@ function main_screen()
   self.player:update()
   self.cursor:update(self)
   self.textbox:update()
-  --self.dummy_character:update(self.cursor, self.textbox)
   self.map:update(self)
-  self.inventory:update(self.cursor)
-  self.dummy:update(self.cursor, self.textbox)
+  self.inventory:update(self)
  end
 
  function state:draw()
@@ -343,9 +347,11 @@ function main_screen()
   self.cursor:draw()
   --self.dummy_character:draw()
 
+--[[
   if not(self.dummy.inventory) then
     self.dummy:draw()
   end
+-]]
   self.textbox:draw()
   self.player:draw()
  end
@@ -407,11 +413,13 @@ function is_between(obj1, obj2, range)
   obj1.y >= obj2.y
 end
 
-main_zone = mkmap(0, 0, 0, 16, 128, 128, 0, {dummycharacter()})
-bar = mkmap(16, 0, 0, 16, 128, 128, 0, {dummycharacter()})
-bakery = mkmap(16, 23, 0, 16, 128, 128, 0, {})
-library = mkmap(16, 48, 0, 16, 128, 128, 0, {})
-
+main_zone = mkmap(0, 0, 0, 0, 16, 16, {
+  dummycharacter(),
+  dummyobject(16, 16, "uN MUEBLE.")
+})
+bar = mkmap(16, 0, 0, 0, 128, 128, { dummycharacter() })
+bakery = mkmap(16, 23, 0, 16, 128, 128, {})
+library = mkmap(16, 48, 0, 16, 128, 128, {})
 
 function _init()
  global_state = title_screen()
