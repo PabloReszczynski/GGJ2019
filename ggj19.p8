@@ -75,7 +75,7 @@ end
 function dummycharacter()
  local dummy_character = {
   x = 16,
-  y = 240,
+  y = 70,
   vx = 3,
   vy = 3,
   sprites = {220,221,220,221},
@@ -100,7 +100,7 @@ function dummycharacter()
     alt:activate()
   end
 
-  local direction = flr(rnd(40))
+  local direction = flr(rnd(20))
 
   if direction == 0 and self.x <= 120 then
    move(self, self.vx, 0, state.map.n)
@@ -108,14 +108,6 @@ function dummycharacter()
   end
   if direction == 1 and self.x >= 8 then
    move(self, -self.vx, 0, state.map.n)
-   self.counter = (self.counter + 1) % 4
-  end
-  if direction == 2 and self.y <= 112 then
-   move(self, 0, self.vy, state.map.n)
-   self.counter = (self.counter + 1) % 4
-  end
-  if direction == 3 and self.y >= 0 then
-    move(self, 0, -self.vy, state.map.n)
    self.counter = (self.counter + 1) % 4
   end
 
@@ -309,11 +301,11 @@ function inventoryslot(x, y)
  return slot
 end
 
-function dummyobject(x, y, description)
+function dummyobject(x, y, sprite, description)
  local dummy_object = {
   x = snap(x),
   y = snap(y),
-  sprite = 1,
+  sprite = sprite,
   draggable = false,
   dragged = false,
   inventory = false,
@@ -543,7 +535,7 @@ end
 
 main_zone = mkmap(0, 0, 0, 0, 16, 16, {
   dummycharacter(),
-  dummyobject(16, 16, "un mueble."),
+--  dummyobject(16, 16, 1, "un mueble."),
 
   -- lamps
   dummy(2, 2, 32, "una lampara."),
@@ -611,6 +603,7 @@ bar = mkmap(16, 0, 0, 0, 128, 128, {
 })
 
 bakery = mkmap(32, 0, 0, 0, 128, 128, {
+
   dummy(1, 3, 195, "el tiempo es una ilusion."), --reloj
 
   -- mesa1
@@ -659,6 +652,8 @@ bakery = mkmap(32, 0, 0, 0, 128, 128, {
   dummy(13, 8, 211, "ser comido o no ser comido"), -- patas
   dummy(12, 9, 240, "una mesa.", 3, 1), -- patas
   dummy(15, 9, 250, "un piso."),
+  dummyobject(24, 60, 246, "taza color corazon."),
+
 })
 
 library = mkmap(48, 0, 0, 0, 128, 128, {
@@ -669,7 +664,7 @@ library = mkmap(48, 0, 0, 0, 128, 128, {
 
   dummy(10, 3, 104, "ya comiste hoy?"),
   dummy(12, 3, 102, "que estas esperando?"),
- dummy(14, 3, 104, "enviame un mensaje cuando\nllegues."),
+  dummy(14, 3, 104, "enviame un mensaje cuando\nllegues."),
 
   dummy(0, 6, 104, "para crecer sano, come cereal, 14 veces al dia."),
   dummy(6, 6, 102, "no soy una simple planta, soy\nuna futura palta imperial."),
@@ -698,7 +693,7 @@ library = mkmap(48, 0, 0, 0, 128, 128, {
   -- corasom
   dummy(2, 7, 105, "♥"),
   dummy(8, 5, 105, "♥"),
-  dummy(11, 7, 105, "♥"),
+  dummyobject(80, 60, 105, "♥"),
 
 
 })
