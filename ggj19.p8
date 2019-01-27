@@ -436,7 +436,8 @@ function title_screen()
 
  function state:draw()
   cls()
-  print("press z + x", 32, 64)
+  print("jomlez", 48, 32, cl_red)
+  print("press 🅾️ + ❎", 32, 64, cl_white)
  end
 
  return state
@@ -921,10 +922,10 @@ __music__
 01 0106044a
 01 0207044b
 01 0308044c
-01 00050409
+00 00050409
 01 0106040a
 01 0207040b
-05 0308040c
+03 0308040c
 01 550d1114
 01 570e1115
 01 590f1116
@@ -938,3 +939,4 @@ __music__
 04 27292b44
 00 41424344
 01 53535649
+
